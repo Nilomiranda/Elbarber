@@ -1,12 +1,13 @@
 defmodule ElbarberWeb.UserService do
   use ElbarberWeb, :controller
+
   import Plug.Conn
   import Ecto.Repo
   import Ecto.Query
 
   alias Elbarber.User
   alias Elbarber.Repo
-  alias ElbarberWeb.PayloadValidator
+
 
   def get_all_users(conn, _params) do
     users = User |> Repo.all
@@ -14,16 +15,8 @@ defmodule ElbarberWeb.UserService do
     |> json(%{:users => users})
   end
 
-  def create_new_user(conn, _params) do
+  def create_new_user(conn)  do
     payload = conn.body_params
-
-    missing_fields = PayloadValidator.validate_payload(["name", "email", "password"], payload)
-
-    if length(missing_fields) > 0 do
-      conn
-      |> put_status(400)
-      |> json(%{:error => "MISSING_REQUIRED_FIELD", :message => "Field #{hd(missing_fields)} is required"})
-    end
 
     search_by_email_query = "users"
       |> where([user], user.email == ^payload["email"])
@@ -31,7 +24,7 @@ defmodule ElbarberWeb.UserService do
 
     already_in_use_email = Repo.all(search_by_email_query)
 
-    if already_in_use_email != nil do
+    if !is_nil(already_in_use_email) do
       conn |> put_status(409) |> json(%{:error => "EMAIL_IN_USE", :message => "Email #{payload["email"]} is already taken."})
     end
 
