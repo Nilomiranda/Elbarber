@@ -23,6 +23,7 @@ defmodule ElbarberWeb.Router do
     pipe_through :api
 
     get "/all", UserController, :index
+    post "/", UserController, :create
   end
 
   # Other scopes may use custom stacks.
