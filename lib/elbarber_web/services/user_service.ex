@@ -4,6 +4,7 @@ defmodule ElbarberWeb.UserService do
   import Plug.Conn
   import Ecto.Repo
   import Ecto.Query
+  import Argon2
 
   alias Elbarber.User
   alias Elbarber.Repo
@@ -24,13 +25,13 @@ defmodule ElbarberWeb.UserService do
 
     already_in_use_email = Repo.one(search_by_email_query)
 
-    IO.inspect(already_in_use_email)
-
     if !is_nil(already_in_use_email) do
       conn |> put_status(409) |> json(%{:error => "EMAIL_IN_USE", :message => "Email #{payload["email"]} is already taken."})
     end
 
-    inserted_user = User.changeset(%User{}, Map.put(payload, "password_hash", payload["password"]))
+    hashed_password = add_hash(payload["password"]).password_hash
+
+    inserted_user = User.changeset(%User{}, Map.put(payload, "password_hash", hashed_password))
 
     case Repo.insert inserted_user do
       {:ok, struct} -> conn |> put_status(200) |> json(struct)
