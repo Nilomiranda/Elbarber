@@ -22,13 +22,15 @@ defmodule ElbarberWeb.UserService do
       |> where([user], user.email == ^payload["email"])
       |> select([user], user.email)
 
-    already_in_use_email = Repo.all(search_by_email_query)
+    already_in_use_email = Repo.one(search_by_email_query)
+
+    IO.inspect(already_in_use_email)
 
     if !is_nil(already_in_use_email) do
       conn |> put_status(409) |> json(%{:error => "EMAIL_IN_USE", :message => "Email #{payload["email"]} is already taken."})
     end
 
-    inserted_user = User.changeset(%User{}, %{name: payload["name"], email: payload["email"], password_hash: payload["password"]})
+    inserted_user = User.changeset(%User{}, Map.put(payload, "password_hash", payload["password"]))
 
     case Repo.insert inserted_user do
       {:ok, struct} -> conn |> put_status(200) |> json(struct)
