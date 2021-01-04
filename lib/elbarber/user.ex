@@ -3,7 +3,7 @@ defmodule Elbarber.User do
   import Ecto.Changeset
 
   # Use this to enable json parsing from the retrieved data
-  @derive {Jason.Encoder, only: [:name, :email, :password_hash, :id, :inserted_at, :updated_at]}
+  @derive {Jason.Encoder, only: [:name, :email, :id, :inserted_at, :updated_at]}
 
   schema "users" do
     field :email, :string

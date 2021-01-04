@@ -5,6 +5,7 @@ defmodule ElbarberWeb.UserService do
   import Ecto.Repo
   import Ecto.Query
   import Argon2
+  import ElbarberWeb.ResponseHelpers
 
   alias Elbarber.User
   alias Elbarber.Repo
@@ -34,12 +35,18 @@ defmodule ElbarberWeb.UserService do
     inserted_user = User.changeset(%User{}, Map.put(payload, "password_hash", hashed_password))
 
     case Repo.insert inserted_user do
-      {:ok, struct} -> conn |> put_status(200) |> json(struct)
+      {:ok, struct} -> conn |> put_status(200) |> json(remove_sensitive_fields(struct, [:password_hash]))
       {:error, changeset} -> conn |> put_status(400) |> json(changeset.errors)
     end
 
     conn
     |> put_status(201)
     |> json(payload)
+  end
+
+  def does_nothing(struct) do
+    IO.puts("struct")
+    IO.inspect(struct)
+    struct
   end
 end
