@@ -43,10 +43,4 @@ defmodule ElbarberWeb.UserService do
     |> put_status(201)
     |> json(payload)
   end
-
-  def does_nothing(struct) do
-    IO.puts("struct")
-    IO.inspect(struct)
-    struct
-  end
 end
