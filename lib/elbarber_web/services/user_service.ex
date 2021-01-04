@@ -4,7 +4,6 @@ defmodule ElbarberWeb.UserService do
   import Plug.Conn
   import Ecto.Repo
   import Ecto.Query
-  import Argon2
   import ElbarberWeb.ResponseHelpers
 
   alias Elbarber.User
@@ -30,9 +29,7 @@ defmodule ElbarberWeb.UserService do
       conn |> put_status(409) |> json(%{:error => "EMAIL_IN_USE", :message => "Email #{payload["email"]} is already taken."})
     end
 
-    hashed_password = add_hash(payload["password"]).password_hash
-
-    inserted_user = User.changeset(%User{}, Map.put(payload, "password_hash", hashed_password))
+    inserted_user = User.changeset(%User{}, payload)
 
     case Repo.insert inserted_user do
       {:ok, struct} -> conn |> put_status(200) |> json(remove_sensitive_fields(struct, [:password_hash]))
