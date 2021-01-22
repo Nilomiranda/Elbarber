@@ -2,8 +2,8 @@ use Mix.Config
 
 # Configure your database
 config :elbarber, Elbarber.Repo,
-  username: "postgres",
-  password: "docker",
+  username: "admin",
+  password: "admin",
   database: "elbarber",
   hostname: "localhost",
   port: 5432,

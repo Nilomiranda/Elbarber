@@ -8,7 +8,7 @@ defmodule ElbarberWeb.UserController do
   plug :validate_payload, [required_fields: ["name", "email", "password"]] when action in [:create]
 
   def index(conn, params) do
-    UserService.get_all_users(conn, params)
+    users = UserService.get_all_users(conn, params)
   end
 
   def create(conn, _params) do

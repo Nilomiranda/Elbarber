@@ -29,6 +29,9 @@ defmodule ElbarberWeb.UserService do
       conn |> put_status(409) |> json(%{:error => "EMAIL_IN_USE", :message => "Email #{payload["email"]} is already taken."})
     end
 
+    IO.puts "USER PAYLOAD"
+    IO.inspect payload
+
     inserted_user = User.changeset(%User{}, payload)
 
     case Repo.insert inserted_user do

@@ -13,6 +13,11 @@ defmodule ElbarberWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :session do
+    plug :fetch_session
+    plug Plug.Session, store: :cookie, key: "elbarber_session", table: :session, signing_salt: "elbarber_salt_test", key_length: 64
+  end
+
   scope "/", ElbarberWeb do
     pipe_through :api
 
@@ -21,6 +26,7 @@ defmodule ElbarberWeb.Router do
 
   scope "/users", ElbarberWeb do
     pipe_through :api
+    pipe_through :session
 
     get "/all", UserController, :index
     post "/", UserController, :create

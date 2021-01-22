@@ -10,16 +10,21 @@ defmodule Elbarber.User do
   schema "users" do
     field :email, :string
     field :name, :string
-    field :password_hash, :string
+    field :password_hash, :string, load_in_query: false
+    field :password, :string, virtual: true
     timestamps()
   end
 
   def changeset(user, attrs) do
     hashed_password = add_hash(attrs["password"]).password_hash
 
+    IO.puts "USER DATA"
+    IO.inspect attrs
+    IO.inspect attrs["password"]
+
     user
-    |> cast(attrs, [:name, :email, :password_hash])
-    |> validate_required([:name, :email, :password_hash])
+    |> cast(attrs, [:name, :email, :password])
+    |> validate_required([:name, :email, :password])
     |> change(password_hash: hashed_password)
     |> unique_constraint(:email)
   end
