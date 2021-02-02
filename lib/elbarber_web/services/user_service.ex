@@ -12,8 +12,8 @@ defmodule ElbarberWeb.UserService do
 
   def get_all_users(conn, _params) do
     users = User |> Repo.all
-    conn
-    |> json(%{:users => users})
+#    conn
+#    |> json(%{:users => users})
   end
 
   def create_new_user(conn)  do

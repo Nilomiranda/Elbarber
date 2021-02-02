@@ -32,6 +32,13 @@ defmodule ElbarberWeb.Router do
     post "/", UserController, :create
   end
 
+  scope "/sessions", ElbarberWeb do
+    pipe_through :api
+    pipe_through :session
+
+    post "/", SessionController, :create
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", ElbarberWeb do
   #   pipe_through :api

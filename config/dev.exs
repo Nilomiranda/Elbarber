@@ -2,8 +2,8 @@ use Mix.Config
 
 # Configure your database
 config :elbarber, Elbarber.Repo,
-  username: "admin",
-  password: "admin",
+  username: "postgres",
+  password: "",
   database: "elbarber",
   hostname: "localhost",
   port: 5432,

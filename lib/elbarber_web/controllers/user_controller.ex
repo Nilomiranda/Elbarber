@@ -9,9 +9,11 @@ defmodule ElbarberWeb.UserController do
 
   def index(conn, params) do
     users = UserService.get_all_users(conn, params)
+    conn
+     |> render("index.json", users: users)
   end
 
   def create(conn, _params) do
-    UserService.create_new_user(conn)
+    user = UserService.create_new_user(conn)
   end
 end
