@@ -2,8 +2,11 @@ defmodule ElbarberWeb.UserView do
   use ElbarberWeb, :view
 
   def render("index.json", %{users: users}) do
-    IO.puts "CALLEd INDEX JSON"
     %{users: render_many(users, __MODULE__, "user.json")}
+  end
+
+  def render("show.json", %{user: user}) do
+    %{user: render_one(user, __MODULE__, "user.json")}
   end
 
   def render("user.json", %{user: user}) do

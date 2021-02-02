@@ -12,8 +12,6 @@ defmodule ElbarberWeb.UserService do
 
   def get_all_users(conn, _params) do
     users = User |> Repo.all
-#    conn
-#    |> json(%{:users => users})
   end
 
   def create_new_user(conn)  do
@@ -29,18 +27,11 @@ defmodule ElbarberWeb.UserService do
       conn |> put_status(409) |> json(%{:error => "EMAIL_IN_USE", :message => "Email #{payload["email"]} is already taken."})
     end
 
-    IO.puts "USER PAYLOAD"
-    IO.inspect payload
+    user_to_insert = User.changeset(%User{}, payload)
 
-    inserted_user = User.changeset(%User{}, payload)
-
-    case Repo.insert inserted_user do
-      {:ok, struct} -> conn |> put_status(200) |> json(remove_sensitive_fields(struct, [:password_hash]))
-      {:error, changeset} -> conn |> put_status(400) |> json(changeset.errors)
+    case Repo.insert user_to_insert do
+      {:ok, new_user} -> {:ok, new_user}
+      {:error, changeset} -> {:error, changeset}
     end
-
-    conn
-    |> put_status(201)
-    |> json(payload)
   end
 end

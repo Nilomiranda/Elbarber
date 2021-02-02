@@ -15,5 +15,6 @@ defmodule ElbarberWeb.UserController do
 
   def create(conn, _params) do
     user = UserService.create_new_user(conn)
+    conn |> render("show.json", user: user)
   end
 end
